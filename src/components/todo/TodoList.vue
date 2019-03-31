@@ -12,7 +12,7 @@
 </template>
 
 <script>
-    import { mapActions, mapGetters, mapState } from 'vuex';
+    import { mapGetters } from 'vuex';
     import TodoListItem from "@/components/todo/TodoListItem";
     import TodoFooter from "@/components/todo/TodoFooter";
 
@@ -24,27 +24,7 @@
         computed: {
             ...mapGetters( [
                 'filteredTodos',
-                'cntCompleted',
-                'cntTodos',
-                'visibilityType',
-                'hasCompleted',
-                'isActiveRecs',
             ] ),
-            ...mapState( [
-                'modalVisible',
-                'modalComponent'
-            ] ),
-        },
-        methods: {
-            ...mapActions( [
-                'removeAllCompleted',
-                'hideModal',
-                'showModal',
-            ] ),
-            removeAllCompletedRecs() {
-                console.log( 'In removeAllCompletedRecs' );
-                this.showModal();
-            }
         },
     }
 </script>

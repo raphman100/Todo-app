@@ -2,7 +2,7 @@
     <div id="info-container">
         <div id="left">
             <div class="todo-count">
-                <span>{{ cntTodos }}</span> {{ visibilityType }} {{ cntTodos | pluralize }}
+                <span>{{ cntTodos }}</span> {{ visibilityType }} {{ cntTodos | pluralize( 'Item' ) }}
             </div>
         </div>
         <div id="center">
@@ -33,6 +33,7 @@
                     @close="hideModal"
                 />
             </div>
+<!--            This space is necessary to keep the line from shifting if the button isn't displayed -->
             <div v-else class="removeCompleted">&nbsp;</div>
         </div>
     </div>
@@ -68,8 +69,8 @@
             ] ),
         },
         filters: {
-            pluralize( n ) {
-                return n === 1 ? 'Item' : 'Items';
+            pluralize( n, str ) {
+                return n === 1 ? str : str + 's';
             },
         },
     }
@@ -102,10 +103,12 @@
         padding-top: 0.1rem;
         color: brown;
         text-align: left;
+        font-size: 1.1rem;
     }
 
     .todo-count span {
         font-weight: bold;
+        font-size: 1.2rem;
     }
 
     .table {
@@ -113,6 +116,7 @@
         margin: 0 auto;
     }
 
+     /* Keep this class, it is used even though it doesn't look like it */
     .make-bold {
         font-weight: bold;
     }
@@ -124,6 +128,7 @@
    ul#horizontal-list li {
         display: inline;
         padding: 1.0rem;
+       font-size: 1.3rem;
     }
 
     ul#horizontal-list li a {
@@ -135,7 +140,7 @@
     }
 
      .destroy {
-        font-size: 0.80rem;
+        font-size: 0.8rem;
         color: brown;
         background-color: bisque;
         font-weight: bold;

@@ -51,10 +51,10 @@ export default new Vuex.Store( {
             return getters.filteredTodosActive.length;
         },
         hasActive: ( state, getters ) => {
-            return getters.cntActive !== 0 ? true : false;
+            return getters.cntActive !== 0;
         },
         hasCompleted: ( state, getters ) => {
-            return getters.cntCompleted !== 0 ? true : false;
+            return getters.cntCompleted !== 0;
         },
         cntCompleted: ( state, getters ) => {
             return getters.filteredTodosCompleted.length;
@@ -119,6 +119,7 @@ export default new Vuex.Store( {
         REMOVE_ALL_COMPLETED( state ) {
             state.todos = state.todos.filter( ( item ) => item.isDone !== true );
             Helpers.setTodoLocalStorage( state.todos );
+            state.modalVisible = false;
         },
         SHOW_MODAL( state, componentName ) {
             state.modalVisible = true;
@@ -164,7 +165,6 @@ export default new Vuex.Store( {
             }
         },
         showModal( context, componentName ) {
-            console.log( 'showModal: ' + componentName );
             context.commit( 'SHOW_MODAL', componentName );
         },
         hideModal( context ) {
