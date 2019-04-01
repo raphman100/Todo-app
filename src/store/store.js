@@ -1,5 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import mutations from '@/store/mutation-types';
+import actions from '@/store/action-types';
 
 Vue.use( Vuex );
 
@@ -95,81 +97,80 @@ export default new Vuex.Store( {
         },
     },
     mutations: {
-        SET_TODOS( state, todos ) {
+        [ mutations.SET_TODOS ]( state, todos ) {
             state.todos = todos;
 
         },
-        SET_VISIBILITY( state, visibility ) {
+        [ mutations.SET_VISIBILITY ]( state, visibility ) {
             state.visibility = visibility;
         },
-        ADD_TODO( state, todo ) {
+        [ mutations.ADD_TODO ]( state, todo ) {
             state.todos.push( todo );
             Helpers.setTodoLocalStorage( state.todos );
         },
-        UPDATE_TODO( state, { index, title, isDone } ) {
+        [ mutations.UPDATE_TODO ]( state, { index, title, isDone } ) {
             const indexToUpdate = state.todos.findIndex( ( item ) => item.index === index );
             state.todos[ indexToUpdate ].isDone = isDone;
             state.todos[ indexToUpdate ].title = title;
             Helpers.setTodoLocalStorage( state.todos );
         },
-        REMOVE_TODO( state, index ) {
+        [ mutations.REMOVE_TODO ]( state, index ) {
             state.todos = state.todos.filter( ( item ) => item.index !== index );
             Helpers.setTodoLocalStorage( state.todos );
         },
-        REMOVE_ALL_COMPLETED( state ) {
+        [ mutations.REMOVE_ALL_COMPLETED ]( state ) {
             state.todos = state.todos.filter( ( item ) => item.isDone !== true );
             Helpers.setTodoLocalStorage( state.todos );
             state.modalVisible = false;
         },
-        SHOW_MODAL( state, componentName ) {
+        [ mutations.SHOW_MODAL ]( state, componentName ) {
             state.modalVisible = true;
             state.modalComponent = componentName;
         },
-        HIDE_MODAL( state ) {
+        [ mutations.HIDE_MODAL ]( state ) {
             state.modalVisible = false;
         },
     },
     actions: {
-        async initAllThings( context ) {
+        async [ actions.initAllThings ]( context ) {
             await context.dispatch( 'initTodos' );
         },
-        async initTodos( context ) {
+        async [ actions.initTodos ]( context ) {
             if ( !Helpers.getTodoLocalStorage() ) {
                 Helpers.setTodoLocalStorage( [] );
             } else {
                 await context.commit( 'SET_TODOS', Helpers.getTodoLocalStorage() );
             }
         },
-        setVisibility( context, visibility ) {
+        [ actions.setVisibility ]( context, visibility ) {
             context.commit( 'SET_VISIBILITY', visibility );
         },
-        async addTodo( context, title ) {
+        async [ actions.addTodo ]( context, title ) {
             await context.commit( 'ADD_TODO', { index: context.getters.nextIndex, title, isDone: false } );
         },
-        async updateTodo( context, todo ) {
+        async [ actions.updateTodo ]( context, todo ) {
             await context.commit( 'UPDATE_TODO', todo );
             if ( !context.getters.hasCompleted || !context.getters.hasActive ) {
                 context.commit( 'SET_VISIBILITY', 'all' );
             }
         },
-        async removeTodo( context, index ) {
+        async [ actions.removeTodo ]( context, index ) {
             await context.commit( 'REMOVE_TODO', index );
             if ( context.getters.cntCompleted === 0 ) {
                 context.commit( 'SET_VISIBILITY', 'all' );
             }
         },
-        async removeAllCompleted( context ) {
+        async [ actions.removeAllCompleted ]( context ) {
             await context.commit( 'REMOVE_ALL_COMPLETED' );
             if ( context.getters.cntCompleted === 0 ) {
                 context.commit( 'SET_VISIBILITY', 'all' );
             }
         },
-        showModal( context, componentName ) {
+        [ actions.showModal ]( context, componentName ) {
             context.commit( 'SHOW_MODAL', componentName );
         },
-        hideModal( context ) {
+        [ actions.hideModal ]( context ) {
             context.commit( 'HIDE_MODAL' );
         },
     },
 } );
-
